@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
+import { EngineComponent } from '../engine/engine.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  template: `<app-engine></app-engine>`,
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {

@@ -18,6 +18,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SettingTabsComponent } from './setting-tabs/setting-tabs.component';
 import { EngineComponent } from './engine/engine.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { EngineComponent } from './engine/engine.component';
     NavComponent,
     HomeComponent,
     SettingTabsComponent,
-    EngineComponent
+    EngineComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

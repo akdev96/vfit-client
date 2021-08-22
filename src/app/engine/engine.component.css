@@ -1,5 +1,4 @@
-canvas#renderCanvas{
-    width: 300px;
-    height: 150px;
-    z-index: 999 !important;
+#renderCanvas{
+    width: 300px !important;
+    height: 150px !important;
 }

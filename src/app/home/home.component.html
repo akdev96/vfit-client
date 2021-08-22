@@ -1,6 +1,33 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
 <mat-grid-list cols="2" rowHeight="550px">
+  <mat-grid-tile col="2" rows="1">
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="dashboard-card-content">
+        <app-engine></app-engine>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile col="2" rows="1">
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>
+          Configurations
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="dashboard-card-content">
+        <app-setting-tabs></app-setting-tabs>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  </mat-grid-list>
+  
+  <!--
+    <mat-grid-list cols="2" rowHeight="550px">
     <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
       <mat-card class="dashboard-card">
         <mat-card-header>
@@ -10,9 +37,9 @@
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
           <div>{{card.content}}</div>
-          <app-engine></app-engine>
         </mat-card-content>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
+-->
