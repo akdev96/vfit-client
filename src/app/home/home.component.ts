@@ -5,6 +5,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
+  template: `<app-engine></app-engine>`,
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
@@ -13,14 +14,14 @@ export class HomeComponent {
     map(({ matches }) => {
       if (matches) {
         return [
-          { title: '', cols: 2, rows: 1, content:'3D Model' },
-          { title: 'Settings', cols: 2, rows: 1, content:'Card2' }
+          { title: '', cols: 2, rows: 1, content:`<app-engine></app-engine>` },
+          { title: 'Settings', cols: 2, rows: 1, content:'tabs-component' }
         ];
       }
 
       return [
-        { title: '', cols: 1, rows: 1, content:'3D Model' },
-        { title: 'Settings', cols: 1, rows: 1, content:'Card2' }
+        { title: '', cols: 1, rows: 1, content:`<app-engine></app-engine>` },
+        { title: 'Settings', cols: 1, rows: 1, content:'tabs-component' }
       ];
     })
   );

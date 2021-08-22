@@ -17,13 +17,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SettingTabsComponent } from './setting-tabs/setting-tabs.component';
+import { EngineComponent } from './engine/engine.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    SettingTabsComponent
+    SettingTabsComponent,
+    EngineComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,7 @@ import { SettingTabsComponent } from './setting-tabs/setting-tabs.component';
     MatMenuModule,
     MatTabsModule
   ],
-  providers: [],
+  providers: [EngineComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
