@@ -1,0 +1,315 @@
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+// import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+
+@Component({
+  selector: 'app-three',
+  templateUrl: './three.component.html',
+  styleUrls: ['./three.component.scss'],
+})
+export class ThreeComponent {
+  @ViewChild('rendererContainer') rendererContainer: ElementRef;
+  @Input() threeDPath: string;
+  @Input() darkMode: boolean;
+
+  loaderType: string; // OBJ | 3MF
+
+  nativeElement: any;
+  comp: any;
+  object: any;
+
+  renderer: any;
+  camera: any;
+  scene: any;
+  controls: any;
+
+  constructor(el: ElementRef) {
+    this.nativeElement = el.nativeElement;
+    setTimeout(() => {
+      this.loaderType = this.threeDPath.substr(this.threeDPath.lastIndexOf('.') + 1);
+      this.play3D();
+      this.animate();
+    });
+    this.render = this.render.bind(this);
+    this.onWindowResize = this.onWindowResize.bind(this);
+    this.onProgress = this.onProgress.bind(this);
+    this.animate = this.animate.bind(this);
+
+    this.darkMode = true;
+  }
+
+  animate() {
+    requestAnimationFrame(this.animate);
+    this.render();
+  }
+  play3D() {
+    const domElement = this.nativeElement.children[0];
+    domElement.innerHTML = '';
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true,
+    });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    // this.renderer.setSize(domElement.offsetWidth, domElement.offsetWidth / window.devicePixelRatio);
+    this.renderer.setSize(domElement.offsetWidth, domElement.offsetHeight);
+
+    domElement.appendChild(this.renderer.domElement);
+
+    this.scene = new THREE.Scene();
+    if (this.darkMode) {
+      this.scene.background = new THREE.Color(0x000000);
+    } else {
+      this.scene.background = new THREE.Color(0xffffff);
+    }
+    this.scene.add(new THREE.AmbientLight(0xcccccc, 0.4));
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    // this.camera.position.set(-2, 2, 2); // z - to control if this is too small
+
+    // this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    // this.camera.position.set(-2, 2, 250);
+
+    this.camera.add(new THREE.PointLight(0xffffff, 0.8));
+
+    this.scene.add(this.camera);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    const loader = new OBJLoader();
+    // const loader = new FBXLoader();
+
+    loader.load(
+      this.threeDPath,
+      (obj) => {
+        // center asset
+        // const box = new THREE.Box3().setFromObject(obj);
+        // const center = new THREE.Vector3();
+        // box.getCenter(center);
+        // obj.position.sub(center);
+        // this.scene.add(obj);
+
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = box.getSize(new THREE.Vector3()).length();
+        const center = box.getCenter(new THREE.Vector3());
+        this.controls.reset();
+
+        obj.position.x += obj.position.x - center.x;
+        obj.position.y += obj.position.y - center.y;
+        obj.position.z += obj.position.z - center.z;
+        this.controls.maxDistance = size * 10;
+        this.camera.near = size / 100;
+        this.camera.far = size * 100;
+        this.camera.updateProjectionMatrix();
+
+        this.camera.position.copy(center);
+        this.camera.position.x += size / 2.0;
+        this.camera.position.y += size / 5.0;
+        this.camera.position.z += size / 2.0;
+
+        this.camera.lookAt(center);
+        this.scene.add(obj);
+        this.controls.update();
+      },
+      this.onProgress,
+    );
+
+    window.addEventListener('resize', this.onWindowResize, false);
+  }
+  onProgress(xhr) {
+    if (xhr.lengthComputable) {
+      const percentComplete = (xhr.loaded / xhr.total) * 100;
+      console.log('model ' + percentComplete + '% downloaded');
+    }
+  }
+
+  onWindowResize() {
+    const domElement = this.nativeElement.children[0];
+    this.camera.aspect = domElement.offsetWidth / domElement.offsetHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(domElement.offsetWidth, domElement.offsetHeight);
+  }
+  render() {
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+
+
+
+
+
+
+import * as THREE from 'three';
+import { ElementRef, Injectable, NgZone, OnDestroy} from '@angular/core';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+
+@Injectable({providedIn: 'root'})
+export class EngineService implements OnDestroy {
+  private canvas: HTMLCanvasElement;
+  private renderer: THREE.WebGLRenderer;
+  private camera: THREE.PerspectiveCamera;
+  private scene: THREE.Scene;
+  private light: THREE.AmbientLight;
+  const object = new OBJLoader();
+
+  private cube: THREE.Mesh;
+
+  private frameId: number = 0;
+
+  public constructor(private ngZone: NgZone) {
+  }
+
+  public ngOnDestroy(): void {
+    if (this.frameId != null) {
+      cancelAnimationFrame(this.frameId);
+    }
+  }
+
+  public createScene(canvas: ElementRef<HTMLCanvasElement>): void {
+    // The first step is to get the reference of the canvas element from our HTML document
+    this.canvas = canvas.nativeElement;
+
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+      alpha: true,    // transparent background
+      antialias: true // smooth edges
+    });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // create the scene
+    this.scene = new THREE.Scene();
+
+    /*this.camera = new THREE.PerspectiveCamera(
+      75, window.innerWidth / window.innerHeight, 0.1, 1000
+    );
+    */
+    this.camera = new THREE.PerspectiveCamera(
+      75, 585 / 488, 0.1, 1000
+    );
+    this.camera.position.z = 5;
+    this.scene.add(this.camera);
+
+    // soft white light
+    //this.light = new THREE.AmbientLight(0x404040);
+    //this.light.position.z = 10;
+    //this.scene.add(this.light);
+
+    const ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+    this.scene.add( ambientLight );
+    const pointLight = new THREE.PointLight( 0xffffff, 0.8 );
+    this.camera.add( pointLight );
+    this.scene.add( camera );
+
+  }
+  
+  public loadModel(): void {
+    object.traverse( function ( child ) {
+      if ( child.isMesh ) child.material.map = texture;
+    } );
+    object.position.y = - 95;
+    this.scene.add( object );
+  }
+  const manager = new THREE.LoadingManager( loadModel );
+    manager.onProgress = function ( item, loaded, total ) {
+      console.log( item, loaded, total );
+    };
+  
+  const textureLoader = new THREE.TextureLoader( manager );
+  const texture = textureLoader.load( 'assets/Textures/Shirt_Texture_01.png' );
+  
+  public onProgress( xhr ): void {
+    if ( xhr.lengthComputable ) {
+      const percentComplete = xhr.loaded / xhr.total * 100;
+      console.log( 'model ' + Math.round( percentComplete, 2 ) + '% downloaded' );
+    }
+  }
+
+  public onError():void {}
+    const loader = new OBJLoader( manager );
+    loader.load( 'assets/Models/Shirt01.obj', function ( obj ) {
+      object = obj;
+    }, onProgress, onError );
+
+  renderer = new THREE.WebGLRenderer();
+  renderer.setPixelRatio( window.devicePixelRatio );
+  //renderer.setSize( window.innerWidth, window.innerHeight );
+  container.appendChild( renderer.domElement );
+  document.addEventListener( 'mousemove', onDocumentMouseMove );
+
+  /*
+  public animate(): void {
+    // We have to run this outside angular zones,
+    // because it could trigger heavy changeDetection cycles.
+    this.ngZone.runOutsideAngular(() => {
+      if (document.readyState !== 'loading') {
+        this.render();
+      } else {
+        window.addEventListener('DOMContentLoaded', () => {
+          //this.requestAnimationFrame( animate );
+				  this.render();
+        });
+      }
+
+      window.addEventListener('resize', () => {
+        this.resize();
+      });
+    });
+  }
+  */
+  
+
+  public renderer(): void {
+    this.frameId = requestAnimationFrame(() => {
+      this.render();
+    });
+
+    this.cube.rotation.x += 0.01;
+    this.cube.rotation.y += 0.01;
+    this.camera.lookAt( this.scene.position );
+    //this.camera.position.x += ( mouseX - this.camera.position.x ) * .05;
+    //this.camera.position.y += ( - mouseY - this.camera.position.y ) * .05;
+    this.renderer.render(this.scene, this.camera);
+    
+  }
+
+  /*
+  public onDocumentMouseMove( event ):void {
+    mouseX = ( event.clientX - windowHalfX ) / 2;
+    mouseY = ( event.clientY - windowHalfY ) / 2;
+  }
+  */
+
+  public resize(): void {
+    const width = 585;
+    const height = 488;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer.setSize(width, height);
+  }
+}
+/*
+function onWindowResize() {
+  windowHalfX = window.innerWidth / 2;
+  windowHalfY = window.innerHeight / 2;
+
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize( window.innerWidth, window.innerHeight );
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

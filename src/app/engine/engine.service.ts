@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { ElementRef, Injectable, NgZone, OnDestroy} from '@angular/core';
 
+
 @Injectable({providedIn: 'root'})
 export class EngineService implements OnDestroy {
   private canvas: HTMLCanvasElement;
@@ -8,6 +9,7 @@ export class EngineService implements OnDestroy {
   private camera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
   private light: THREE.AmbientLight;
+  
 
   private cube: THREE.Mesh;
 
@@ -36,8 +38,12 @@ export class EngineService implements OnDestroy {
     // create the scene
     this.scene = new THREE.Scene();
 
-    this.camera = new THREE.PerspectiveCamera(
+    /*this.camera = new THREE.PerspectiveCamera(
       75, window.innerWidth / window.innerHeight, 0.1, 1000
+    );
+    */
+    this.camera = new THREE.PerspectiveCamera(
+      75, 575 / 478, 0.1, 1000
     );
     this.camera.position.z = 5;
     this.scene.add(this.camera);
@@ -83,8 +89,8 @@ export class EngineService implements OnDestroy {
   }
 
   public resize(): void {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = 575;
+    const height = 478;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
