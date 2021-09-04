@@ -17,9 +17,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { SettingTabsComponent } from './setting-tabs/setting-tabs.component';
-import { EngineComponent } from './engine/engine.component';
 import { AboutComponent } from './about/about.component';
-import { ModelComponent } from './model/model.component';
+import { EngineComponent } from './engine/engine.component';
 
 @NgModule({
   declarations: [
@@ -27,9 +26,8 @@ import { ModelComponent } from './model/model.component';
     NavComponent,
     HomeComponent,
     SettingTabsComponent,
-    EngineComponent,
     AboutComponent,
-    ModelComponent
+    EngineComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +44,7 @@ import { ModelComponent } from './model/model.component';
     MatMenuModule,
     MatTabsModule
   ],
-  providers: [EngineComponent],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

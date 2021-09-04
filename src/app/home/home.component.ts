@@ -14,13 +14,13 @@ export class HomeComponent {
     map(({ matches }) => {
       if (matches) {
         return [
-          { title: '', cols: 2, rows: 1, content:`<app-engine></app-engine>` },
+          { title: '', cols: 2, rows: 1, content: `<app-engine></app-engine>` },
           { title: 'Settings', cols: 2, rows: 1, content:'tabs-component' }
         ];
       }
 
       return [
-        { title: '', cols: 1, rows: 1, content:`<app-engine></app-engine>` },
+        { title: '', cols: 1, rows: 1, content: `<app-engine></app-engine>` },
         { title: 'Settings', cols: 1, rows: 1, content:'tabs-component' }
       ];
     })
