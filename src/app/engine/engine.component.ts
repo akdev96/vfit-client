@@ -37,12 +37,52 @@ export class EngineComponent implements OnInit {
     //this.canvas.nativeElement(renderer.domElement);
     //this.canvas.nativeElement.querySelector('#rendererContainer');
 
+    /*const textureloader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = true;
+    const texture = new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png');
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    var texture = textureLoader.load('/assets/Textures/Shirt_Texture_01.png');
+    */
+    var textureLoader = new THREE.TextureLoader();
+    let material = new THREE.MeshBasicMaterial({ map: textureLoader.load('/assets/Textures/Shirt_Texture_01.png') });
+
     const loader = new GLTFLoader();
     loader.load('assets/Models/Shirt01.glb', function (gltf) {
+      var model = gltf.scene;
       scene.add(gltf.scene);
-      //const model = gltf.scene.children[0];
+      model.position.set(0, -1.3, 0);
+
+      /*model.traverse((o) => {
+        if (o.isMesh) {
+          note: for a multi-material mesh, `o.material` may be an array,
+          in which case you'd need to set `.map` on each value.
+          o.material.map = texture;
+        }
+      });
+
+      const model = gltf.scene.children[0];
       const model = gltf.scene;
-      model.position.set(0, -1.3, 0)
+      let model2 = gltf.scene;
+      let part = model.getObjectByName('Shirt01')
+
+
+      new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png')
+      });
+
+      part.material = new THREE.MeshStandardMaterial({
+        color: 0xff4400, metalness: 1.0, roughness: 0.2, name: 'orange'
+      })
+
+
+      textureLoader.crossOrigin = true;
+      textureLoader.load('/assets/Textures/Shirt_Texture_01.png', function (texture) {
+        console.log("TEXTURE LOADED", texture);
+        texture.anisotropy = 16
+        var material = new THREE.MeshPhongMaterial({ map: texture, opacity: 1, transparent: true });
+
+      });
+      */
 
     }, undefined, function (error) {
       console.error(error);
@@ -71,21 +111,23 @@ export class EngineComponent implements OnInit {
   }
 }
 
-//@ViewChild('canvas', { static: true })
-      //@ViewChild('rendererContainer', null) rendererContainer: ElementRef;
-      //@ViewChild('rendererContainer', null) canvas: ElementRef;
-      //@ViewChild('rendererContainer', { static: true })
-      //canvas: ElementRef<HTMLCanvasElement>;
-    //private ctx: CanvasRenderingContext2D;
-    //this.ctx = this.canvas.nativeElement.getContext('2d');
-    //const canvas = new ElementRef<HTMLCanvasElement>;
-    //const canvas: ElementRef<HTMLCanvasElement> = document.querySelector('#rendererContainer');
-    //const canvas: ElementRef<HTMLCanvasElement> = document.body.appendChild(renderer.domElement);
-      //canvas: document.querySelector('#rendererContainer'),
-      //canvas: this.canvas.nativeElement.appendChild('#rendererContainer'),
-    //@ViewChild('rendererContainer') renderContainer: ElementRef<HTMLElement>;
-    //this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
-    //document.getElementsByClassName('engine-wrapper').appendChild(renderer.domElement)
-    //rendererContainer.appendChild(renderer.domElement);
-    //getElementsById('rendererContainer').appendChild(renderer.domElement);
-    //this.canvas.nativeElement.appendChild('#rendererContainer'),
+/*
+    @ViewChild('canvas', { static: true })
+      @ViewChild('rendererContainer', null) rendererContainer: ElementRef;
+      @ViewChild('rendererContainer', null) canvas: ElementRef;
+      @ViewChild('rendererContainer', { static: true })
+      canvas: ElementRef<HTMLCanvasElement>;
+    private ctx: CanvasRenderingContext2D;
+    this.ctx = this.canvas.nativeElement.getContext('2d');
+    const canvas = new ElementRef<HTMLCanvasElement>;
+    const canvas: ElementRef<HTMLCanvasElement> = document.querySelector('#rendererContainer');
+    const canvas: ElementRef<HTMLCanvasElement> = document.body.appendChild(renderer.domElement);
+      canvas: document.querySelector('#rendererContainer'),
+      canvas: this.canvas.nativeElement.appendChild('#rendererContainer'),
+    @ViewChild('rendererContainer') renderContainer: ElementRef<HTMLElement>;
+    this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
+    document.getElementsByClassName('engine-wrapper').appendChild(renderer.domElement)
+    rendererContainer.appendChild(renderer.domElement);
+    getElementsById('rendererContainer').appendChild(renderer.domElement);
+    this.canvas.nativeElement.appendChild('#rendererContainer'),
+*/
