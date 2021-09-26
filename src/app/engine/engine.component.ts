@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { AmbientLight, PointLight } from 'three';
+//import { AmbientLight, PointLight } from 'three';
 
 
 @Component({
@@ -43,12 +43,16 @@ export class EngineComponent implements OnInit {
     const material = new THREE.MeshBasicMaterial({ map: texture });
     var texture = textureLoader.load('/assets/Textures/Shirt_Texture_01.png');
     */
-    var textureLoader = new THREE.TextureLoader();
-    let material = new THREE.MeshBasicMaterial({ map: textureLoader.load('/assets/Textures/Shirt_Texture_01.png') });
+    const texture = new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png');
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    //let material = new THREE.MeshBasicMaterial({ map: textureLoader.load('/assets/Textures/Shirt_Texture_01.png') });
+
 
     const loader = new GLTFLoader();
     loader.load('assets/Models/Shirt01.glb', function (gltf) {
       var model = gltf.scene;
+      model.name = 'shirt';
+
       scene.add(gltf.scene);
       model.position.set(0, -1.3, 0);
 
@@ -92,10 +96,12 @@ export class EngineComponent implements OnInit {
 
     const controls = new OrbitControls(camera, renderer.domElement);
     const pointLight = new THREE.PointLight(0xffffff)
-    pointLight.position.set(15, 15, 15)
+    const pointLight2 = new THREE.PointLight(0xffffff)
+    pointLight.position.set(25, 25, 25)
+    pointLight2.position.set(-25, -25, -45)
 
     const ambientLight = new THREE.AmbientLight(0xffffff)
-    scene.add(pointLight, ambientLight)
+    scene.add(pointLight, pointLight2, ambientLight)
 
     //const lightHelper = new THREE.PointLightHelper(pointLight);
     //const gridHelper = new THREE.GridHelper(200, 50)

@@ -19,6 +19,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SettingTabsComponent } from './setting-tabs/setting-tabs.component';
 import { AboutComponent } from './about/about.component';
 import { EngineComponent } from './engine/engine.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EngineComponent } from './engine/engine.component';
     HomeComponent,
     SettingTabsComponent,
     AboutComponent,
-    EngineComponent
+    EngineComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +44,8 @@ import { EngineComponent } from './engine/engine.component';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]

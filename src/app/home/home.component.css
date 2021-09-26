@@ -19,3 +19,16 @@
 .dashboard-card-content {
   text-align: center;
 }
+
+.slider-nav{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100vh;
+  width: 400px;
+  z-index: 9999;
+  background: #ffffff;
+  padding: 15px;
+  overflow: hidden;
+  display: none;
+}

@@ -1,0 +1,15 @@
+.example-sidenav-content {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  padding: 20px;
+  position: absolute;
+  height: 100%;
+}
