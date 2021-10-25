@@ -4,3 +4,7 @@
     /*grid-template-rows: 100px;*/
     padding: 25px;
 }
+
+.example-large-box a{
+    cursor: pointer;
+}

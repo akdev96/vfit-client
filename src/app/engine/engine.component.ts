@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 //import { AmbientLight, PointLight } from 'three';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class EngineComponent implements OnInit {
   ngOnInit(): void {
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(12, 577 / 488, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(12, 622 / 516, 0.1, 1000);
     //const canvas = document.getElementById("rendererContainer");
 
     const renderer = new THREE.WebGLRenderer({
@@ -30,10 +31,12 @@ export class EngineComponent implements OnInit {
       alpha: true,    // transparent background
       antialias: true // smooth edges
     });
+    renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(577, 488);
+    renderer.setSize(622, 516);
 
     document.body.appendChild(renderer.domElement); //render content on page
+
     //this.canvas.nativeElement(renderer.domElement);
     //this.canvas.nativeElement.querySelector('#rendererContainer');
 
@@ -43,18 +46,51 @@ export class EngineComponent implements OnInit {
     const material = new THREE.MeshBasicMaterial({ map: texture });
     var texture = textureLoader.load('/assets/Textures/Shirt_Texture_01.png');
     */
-    const texture = new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png');
-    const material = new THREE.MeshBasicMaterial({ map: texture });
+
     //let material = new THREE.MeshBasicMaterial({ map: textureLoader.load('/assets/Textures/Shirt_Texture_01.png') });
 
+    //const dracoLoader = new DRACOLoader();
+    //dracoLoader.setDecoderPath('js/libs/draco/gltf/');
 
     const loader = new GLTFLoader();
-    loader.load('assets/Models/Shirt01.glb', function (gltf) {
-      var model = gltf.scene;
-      model.name = 'shirt';
 
+    let modelLoader = new THREE.TextureLoader().load('./assets/Textures/Shirt_Texture_01.png');
+    loader.load('./assets/Models/Shirt01.glb', (gltf) => {
+      let model = gltf.scene;
+      model.traverse(function (node) {
+        if (node instanceof THREE.Mesh) {
+          node.material.map = modelLoader;
+        }
+      });
+      //scene.add(model);
+      //scene.background = new THREE.Color(0x777777);
       scene.add(gltf.scene);
-      model.position.set(0, -1.3, 0);
+      model.position.set(0, -1.35, 0);
+      modelLoader.repeat.set(1, 1); //scaling texture
+      modelLoader.needsUpdate = true;
+    });
+
+
+    //const tdmodel: any = loader.load('assets/Models/Shirt01.glb', function (gltf) {
+      //var model = gltf.scene;
+
+      //const material = new THREE.MeshBasicMaterial({ map: texture });
+      //const mesh = new THREE.Mesh(model, material);
+      //mesh.material.map = THREE.ImageUtils.loadTexture('/assets/Textures/Shirt_Texture_01.png');
+      //scene.add(mesh);
+      //model.name = 'shirt';
+
+      /*
+      scene.background = new THREE.Color(0x777777);
+      scene.add(gltf.scene);
+      model.position.set(0, -1.35, 0);
+      */
+
+      // const texture = new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png');
+      // texture.flipY = false;
+      // const material = new THREE.MeshBasicMaterial({ map: texture });
+      // const mesh = new THREE.Mesh(model, material);
+      // scene.add(mesh);
 
       /*model.traverse((o) => {
         if (o.isMesh) {
@@ -87,10 +123,21 @@ export class EngineComponent implements OnInit {
 
       });
       */
-
-    }, undefined, function (error) {
+/*
+    },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+      },
+      function (error) {
       console.error(error);
     });
+*/
+    // const texture = new THREE.TextureLoader().load('/assets/Textures/Shirt_Texture_01.png');
+    // const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const material = new THREE.MeshBasicMaterial({ map: texture });
+    // const mesh = new THREE.Mesh(tdmodel.model, material);
+    // scene.add(mesh);
+
 
     camera.position.z = 4;
 
@@ -98,7 +145,7 @@ export class EngineComponent implements OnInit {
     const pointLight = new THREE.PointLight(0xffffff)
     const pointLight2 = new THREE.PointLight(0xffffff)
     pointLight.position.set(25, 25, 25)
-    pointLight2.position.set(-25, -25, -45)
+    pointLight2.position.set(-25, 25, -35)
 
     const ambientLight = new THREE.AmbientLight(0xffffff)
     scene.add(pointLight, pointLight2, ambientLight)
@@ -114,6 +161,7 @@ export class EngineComponent implements OnInit {
       controls.update();
     }
     animate();
+
   }
 }
 
